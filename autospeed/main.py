@@ -50,8 +50,10 @@ class AutoSpeed:
         self.validate_inner_margin = config.getfloat('validate_inner_margin', default=20.0, above=0.0)
         self.validate_iterations   = config.getint(  'validate_iterations', default=50, minval=1)
 
-        if config.has_option('results_dir'):
-            self.results_dir = os.path.expandiser(config.get('results_dir'))
+        # This access is here, because klipper's ConfigWrapper doesn't implement has_option
+        explicit_results_dir = config.get('results_dir', None)
+        if explicit_results_dir:
+            self.results_dir = os.path.expandiser(explicit_results_dir)
             if not os.path.exists(self.results_dir):
                 raise config.error(f"The specified results path '{self.results_dir}' does not exist or klippy does not have access to it.")
         else:
