@@ -53,7 +53,7 @@ class AutoSpeed:
         # This access is here, because klipper's ConfigWrapper doesn't implement has_option
         explicit_results_dir = config.get('results_dir', None)
         if explicit_results_dir:
-            self.results_dir = os.path.expandiser(explicit_results_dir)
+            self.results_dir = os.path.expanduser(explicit_results_dir)
             if not os.path.exists(self.results_dir):
                 raise config.error(f"The specified results path '{self.results_dir}' does not exist or klippy does not have access to it.")
         else:
