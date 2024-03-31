@@ -1,0 +1,15 @@
+[build-system]
+requires = [ "setuptools", "setuptools-scm" ]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "klipper_auto_speed"
+authors = []
+description = "Klipper module for automatically calculating your printer's maximum acceleration/velocity"
+readme = "README.md"
+requires-python = ">=3.6" # As per the output of vermin
+license = { text = "MIT" }
+dependencies = [
+    "matplotlib"
+]
+dynamic = [ "version" ]
