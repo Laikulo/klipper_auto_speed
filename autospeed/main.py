@@ -50,13 +50,26 @@ class AutoSpeed:
         self.validate_inner_margin = config.getfloat('validate_inner_margin', default=20.0, above=0.0)
         self.validate_iterations   = config.getint(  'validate_iterations', default=50, minval=1)
 
-        for path in ( # Could be problematic if neither of these paths work
-            os.path.dirname(self.printer.start_args['log_file']),
-            os.path.expanduser('~/printer_data/config')
-            ):
-            if os.path.exists(path):
-                results_default = path
-        self.results_dir = config.get('results_dir',default=results_default)
+        if config.has_option('results_dir'):
+            self.results_dir = os.path.expandiser(config.get('results_dir'))
+            if not os.path.exists(self.results_dir):
+                raise config.error(f"The specified results path '{self.results_dir}' does not exist or klippy does not have access to it.")
+        else:
+            results_canidates =  [
+                os.path.expanduser('~/printer_data/config')
+                ]
+            if 'log_file' in self.printer.start_args:
+                results_canidates.append(
+                    os.path.dirname(self.printer.start_args['log_file']),
+                    )
+            for path in results_canidates:
+                if os.path.exists(path):
+                    self.results_dir = path
+                    break
+
+        if not self.results_dir:
+            raise config.error("klipper_auto_speed was unable to determine where to put its results. Specify one with the `results_dir` option")
+
 
         self.toolhead = None
         self.printer.register_event_handler("klippy:connect", self.handle_connect)
